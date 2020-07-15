@@ -31,11 +31,15 @@ public class Character : MonoBehaviour
     public float distanceFromEnemy;
     public Transform target;
     public TargetIndicator targetIndicator;
+    public float damage;
+
     State state;
     Animator animator;
     Vector3 originalPosition;
     Quaternion originalRotation;
     Health health;
+    BuffApplier buffApplier;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -46,6 +50,7 @@ public class Character : MonoBehaviour
         originalRotation = transform.rotation;
         health = GetComponent<Health>();
         targetIndicator = GetComponentInChildren<TargetIndicator>();
+        buffApplier = GetComponent<BuffApplier>();
     }
 
     public bool IsIdle()
@@ -66,12 +71,29 @@ public class Character : MonoBehaviour
         state = newState;
     }
 
-    public void DoDamage()
+    public void DoDamage(Character instance)
     {
         if (IsDead())
             return;
 
-        health.ApplyDamage(1.0f); // FIXME захардкожено
+        float damageToApply = instance.damage;
+
+        if(buffApplier != null && buffApplier.IsBlockSuccess()){
+            damageToApply = 0.0f;
+            Debug.Log("" + name + " blocked damage!");
+        }
+
+        if(instance.buffApplier != null && instance.buffApplier.IsDoubleDamageSuccess()){
+            damageToApply *= 2.0f;
+            Debug.Log("" + instance.name + " deals 2xDamage!");
+        }
+        
+
+        //FIX
+        //Вроде, нужно сделать как-то универсальнее. Может через switch..
+        //Сделать какое нибудь сообщение о срабатывании бафов
+
+        health.ApplyDamage(damageToApply);
         if (health.current <= 0.0f)
             state = State.BeginDying;
     }
@@ -116,6 +138,7 @@ public class Character : MonoBehaviour
         distance = (targetPosition - transform.position);
 
         Vector3 step = direction * runSpeed;
+        step.y = 0;
         if (step.magnitude < distance.magnitude) {
             transform.position += step;
             return false;

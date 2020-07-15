@@ -14,6 +14,7 @@ public class MenuController : MonoBehaviour
 
     public CanvasGroup mainScreen;
     public CanvasGroup settingsScreen;
+    public CanvasGroup levelChooseScreen;
 
     void SetCurrentScreen(Screen screen)
     {
@@ -29,7 +30,7 @@ public class MenuController : MonoBehaviour
     public void StartNewGame()
     {
         SetCurrentScreen(Screen.None);
-        LoadingScreen.instance.LoadScene("SampleScene");
+        LoadingScreen.instance.LoadScene("LevelSelectionMenu");
     }
 
     public void OpenSettings()
@@ -46,4 +47,6 @@ public class MenuController : MonoBehaviour
     {
         Application.Quit();
     }
+
+
 }
