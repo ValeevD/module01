@@ -9,6 +9,7 @@ public class GameResultProcess : MonoBehaviour
     
     private CanvasGroup gameResultCanvasGroup;
     private CanvasGroup[] allCanvasGroups;
+    public GameEndSounds gameEndSounds;
 
     private void Start()
     {
@@ -19,11 +20,13 @@ public class GameResultProcess : MonoBehaviour
     public void ProcessWin()
     {
         ProcessWinLose(true);
+        gameEndSounds.PlayWinSound();
     }
 
     public void ProcessLose()
     {
         ProcessWinLose(false);
+        gameEndSounds.PlayLoseSound();
     }
 
     private void ProcessWinLose(bool isWin=false)

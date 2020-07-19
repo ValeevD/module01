@@ -25,6 +25,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BloodParticles: {fileID: 5405712914606187199}
+--- !u!114 &8230812944984270800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7649634686476563421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facbb4aec124ca34bb621abe2b1d504b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   FireParticles: {fileID: 8788724425194130811}
 --- !u!1001 &813895660951664754
 PrefabInstance:
@@ -253,7 +265,7 @@ PrefabInstance:
     - target: {fileID: 340535909650754453, guid: 73e1432563d8c1a48839445fb70ed3d9,
         type: 3}
       propertyPath: m_Name
-      value: Policeman1
+      value: PoliceMan
       objectReference: {fileID: 0}
     - target: {fileID: 1113337458372151200, guid: 73e1432563d8c1a48839445fb70ed3d9,
         type: 3}
@@ -270,11 +282,41 @@ PrefabInstance:
       propertyPath: distanceFromEnemy
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1113337458372151200, guid: 73e1432563d8c1a48839445fb70ed3d9,
+        type: 3}
+      propertyPath: attackSoundPlay
+      value: 
+      objectReference: {fileID: 6569268507221583422}
+    - target: {fileID: 1113337458372151200, guid: 73e1432563d8c1a48839445fb70ed3d9,
+        type: 3}
+      propertyPath: gotDamageSoundPlay
+      value: 
+      objectReference: {fileID: 4925011604766431795}
+    - target: {fileID: 2471748748602113334, guid: 73e1432563d8c1a48839445fb70ed3d9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3177857691827949850, guid: 73e1432563d8c1a48839445fb70ed3d9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3871863445302558326, guid: 73e1432563d8c1a48839445fb70ed3d9,
+        type: 3}
+      propertyPath: audioClips.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3871863445302558326, guid: 73e1432563d8c1a48839445fb70ed3d9,
+        type: 3}
+      propertyPath: audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 8604fe473e6259846aa4ef4aa81cd9ed, type: 3}
+    - target: {fileID: 3871863445302558326, guid: 73e1432563d8c1a48839445fb70ed3d9,
+        type: 3}
+      propertyPath: audioClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8604fe473e6259846aa4ef4aa81cd9ed, type: 3}
     - target: {fileID: 8602854757133437893, guid: 73e1432563d8c1a48839445fb70ed3d9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -333,7 +375,7 @@ PrefabInstance:
     - target: {fileID: 8876405768854389737, guid: 73e1432563d8c1a48839445fb70ed3d9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73e1432563d8c1a48839445fb70ed3d9, type: 3}
@@ -349,3 +391,27 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7967190639732217928}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6569268507221583422 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3871863445302558326, guid: 73e1432563d8c1a48839445fb70ed3d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7967190639732217928}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba796b5b4acdfd488426bf7710aad14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4925011604766431795 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3082716527079309947, guid: 73e1432563d8c1a48839445fb70ed3d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7967190639732217928}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba796b5b4acdfd488426bf7710aad14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
