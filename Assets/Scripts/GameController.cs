@@ -3,20 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class GameController : MonoBehaviour
 {
     public CanvasGroup buttonsCanvasGroup;
+    public CanvasGroup gameMenuCanvasGroup;
     public Button switchButton;
+    public GameResultProcess gameResultProcess;
+
     [SerializeField] private Character[] playerCharacters = default;
     [SerializeField] private Character[] enemyCharacters = default;
+
+
     Character currentTarget;
     bool waitingForInput;
+
+    bool gamePaused = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
         switchButton.onClick.AddListener(NextTarget);
         StartCoroutine(GameLoop());
+        FindObjectsOfType<CanvasGroup>();
     }
 
     public void PlayerAttack()
@@ -73,11 +83,13 @@ public class GameController : MonoBehaviour
     void PlayerWon()
     {
         Debug.Log("Player won");
+        gameResultProcess.ProcessWin();
     }
 
     void PlayerLost()
     {
         Debug.Log("Player lost");
+        gameResultProcess.ProcessLose();
     }
 
     bool CheckEndGame()
@@ -110,6 +122,7 @@ public class GameController : MonoBehaviour
 
                 currentTarget.targetIndicator.gameObject.SetActive(true);
 
+
                 Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, true);
                 waitingForInput = true;
                 while (waitingForInput)
@@ -138,5 +151,38 @@ public class GameController : MonoBehaviour
                     yield return null;
             }
         }
+    }
+
+    public void PauseGame()
+    {
+        SwitchGamePause(true);
+    }
+
+    public void ResumeGame()
+    {
+        SwitchGamePause(false);
+    }
+
+    public void MainMenu()
+    {
+        StopAllCoroutines();
+        Time.timeScale = 1;
+        LoadingScreen.instance.LoadScene("MainMenu");
+    }
+
+    public void RestartLevel()
+    {
+        StopAllCoroutines();
+        Time.timeScale = 1;  
+        LoadingScreen.instance.RestartScene();     
+    }
+
+    private void SwitchGamePause(bool pauseGame)
+    {
+        Time.timeScale = pauseGame ? 0 : 1;
+        gamePaused = pauseGame;
+
+        Utility.SetCanvasGroupEnabled(gameMenuCanvasGroup, pauseGame);
+        Utility.SetCanvasGroupEnabled(buttonsCanvasGroup, !pauseGame);       
     }
 }

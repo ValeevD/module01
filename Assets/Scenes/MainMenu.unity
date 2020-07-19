@@ -293,6 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainScreen: {fileID: 1174465018}
   settingsScreen: {fileID: 789295144}
+  levelChooseScreen: {fileID: 0}
 --- !u!4 &278529209
 Transform:
   m_ObjectHideFlags: 0

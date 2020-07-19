@@ -31,14 +31,23 @@ public class Character : MonoBehaviour
     public float distanceFromEnemy;
     public Transform target;
     public TargetIndicator targetIndicator;
+    public float damage;
+    public SoundPlay attackSoundPlay;
+    public SoundPlay gotDamageSoundPlay;
+    public SoundPlay deathSoundPlay;
+    
     State state;
     Animator animator;
     Vector3 originalPosition;
     Quaternion originalRotation;
     Health health;
+
     HealthIndicator healthIndicator;
 
+    BuffApplier buffApplier;
 
+    BloodEffectBehaviour bloodEffect;
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -49,7 +58,10 @@ public class Character : MonoBehaviour
         health = GetComponent<Health>();
         targetIndicator = GetComponentInChildren<TargetIndicator>();
         healthIndicator = GetComponentInChildren<HealthIndicator>();
+        buffApplier = GetComponent<BuffApplier>();
+        bloodEffect = GetComponent<BloodEffectBehaviour>();
     }
+
 
     public bool IsIdle()
     {
@@ -69,14 +81,41 @@ public class Character : MonoBehaviour
         state = newState;
     }
 
-    public void DoDamage()
+    public void DoDamage(Character instance)
     {
         if (IsDead())
             return;
 
-        health.ApplyDamage(1.0f); // FIXME захардкожено
+        float damageToApply = instance.damage;
+
+        if(buffApplier != null && buffApplier.IsBlockSuccess()){
+            damageToApply = 0.0f;
+            Debug.Log("" + name + " blocked damage!");
+        }
+
+        if(instance.buffApplier != null && instance.buffApplier.IsDoubleDamageSuccess()){
+            damageToApply *= 2.0f;
+            Debug.Log("" + instance.name + " deals 2xDamage!");
+        }
+        
+
+        //FIX
+        //Вроде, нужно сделать как-то универсальнее. Может через switch..
+        //Сделать какое нибудь сообщение о срабатывании бафов
+
+        health.ApplyDamage(damageToApply);
         if (health.current <= 0.0f)
+        {
             state = State.BeginDying;
+            StartCoroutine(OnShootEnd(instance, deathSoundPlay));
+            //deathSoundPlay.Play();
+        }
+        else if(damageToApply > 0.0f)
+        {
+            StartCoroutine(OnShootEnd(instance, gotDamageSoundPlay));
+        }
+        
+
     }
 
     [ContextMenu("Attack")]
@@ -120,6 +159,7 @@ public class Character : MonoBehaviour
         distance = (targetPosition - transform.position);
 
         Vector3 step = direction * runSpeed;
+        step.y = 0;
         if (step.magnitude < distance.magnitude) {
             transform.position += step;
             return false;
@@ -154,8 +194,7 @@ public class Character : MonoBehaviour
 
             case State.BeginAttack:
                 animator.SetTrigger("MeleeAttack");
-                var meleeEffect = target.GetComponent<BloodEffectBehaviour>();
-                meleeEffect.PLayEffect();
+                StartCoroutine(nameof(OnCompleteAttackAnimation));
                 state = State.Attack;
                 break;
 
@@ -164,19 +203,19 @@ public class Character : MonoBehaviour
 
             case State.BeginShoot:
                 animator.SetTrigger("Shoot");
-                var shootEffect = target.GetComponent<BloodEffectBehaviour>();
-                shootEffect.PLayEffect();
+                // var shootEffect = target.GetComponent<BloodEffectBehaviour>();
+                // shootEffect.PLayEffect();
                 StartCoroutine(nameof(OnCompleteAttackAnimation));
-                
                 state = State.Shoot;
                 break;
 
             case State.Shoot:
-                
+                //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
                 break;
 
             case State.BeginPunch:
                 animator.SetTrigger("Punch");
+                StartCoroutine(nameof(OnCompleteAttackAnimation));
                 state = State.Punch;
                 break;
 
@@ -205,9 +244,27 @@ public class Character : MonoBehaviour
 
     IEnumerator OnCompleteAttackAnimation()
     {
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f);
+        var isPistol = weapon == Weapon.Pistol;
 
-        var fireEffect = GetComponent<FireEffectBehaviour>();
-        fireEffect.PlayFireEffect();
+        if(isPistol)
+            yield return new WaitForSeconds(0.2f);
+
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f);        
+        
+        if(isPistol)
+        {
+            var fireEffect = GetComponent<FireEffectBehaviour>();
+            fireEffect.PlayFireEffect();
+        }
+
+        attackSoundPlay.Play();
     }
+
+    IEnumerator OnShootEnd(Character instance, SoundPlay soundEffect)
+    {
+        yield return new WaitUntil(() => instance.state != State.Shoot);
+        soundEffect.Play();
+        bloodEffect.PLayEffect();
+    }
+
 }
